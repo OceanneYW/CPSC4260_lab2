@@ -10,8 +10,13 @@ h2 {
 
 .axis line {
   fill: none;
-  stroke: darkgray;
+  stroke: rgb(228, 222, 222);
 
+}
+
+.axis_yLine {
+  fill: none;
+  stroke: none;
 }
 
 .axis text {
@@ -21,5 +26,5 @@ h2 {
 
 .point {
   fill-opacity: 0.5;
-  fill: lightblue;
+  fill: rgb(44, 168, 184);
 }

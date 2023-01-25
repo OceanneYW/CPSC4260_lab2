@@ -49,7 +49,7 @@ class Scatterplot {
       .range([vis.height, 0]);
 
     vis.yScale2 = d3.scaleLinear()
-      .domain([0, 1])
+      // .domain([0, 1])
       .range([vis.height, 0]);
 
     // Initialize axes
@@ -87,27 +87,19 @@ class Scatterplot {
 
     // Append y-axis group
     vis.yAxisG = vis.chart.append('g')
-      .attr('class', 'axis y-axis')
+      .attr('class', 'axis y-axis' , 'axis_yLine')
 
     vis.yAxisGR = vis.chart.append('g')
       .attr('class', 'axis y-axis-r')
       .attr('transform', `translate(${vis.width},0)`)
 
     // Append both axis titles
-    // vis.chart.append('text')
-    //     // .attr('class', 'axis-title')
-    //     .attr('y', vis.height - 15)
-    //     .attr('x', vis.width + 10)
-    //     .attr('dy', '.71em')
-    //     .style('text-anchor', 'end')
-    //     .text('Distance');
-
-    // vis.svg.append('text')
-    //     .attr('class', 'axis-title')
-    //     .attr('x', 0)
-    //     .attr('y', 0)
-    //     .attr('dy', '.71em')
-    //     .text('Hours');
+    vis.chart.append('text')
+        // .attr('class', 'axis-title')
+        .attr('y', -15)
+        .attr('x', vis.width + 10)
+        .attr("text-anchor", "end")
+        .text('Drug Efficacy (mean)');
   }
 
   /**
@@ -144,7 +136,7 @@ class Scatterplot {
       .enter()
       .append('circle')
       .attr('class', 'point')
-      .attr('r', 4)
+      .attr('r', 8)
       .attr('cy', d => vis.yScale1(vis.yValue(d)))
       .attr('cx', d => vis.xScale(vis.xValue(d)));
 
