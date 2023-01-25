@@ -4,6 +4,7 @@
 d3.csv('data/rawdata.csv')
   .then(data => {
     
+    // Convert strings to numbers
     data.forEach(d => {
       d.trial = +d.trial;
       d.efficacy = +d.efficacy;

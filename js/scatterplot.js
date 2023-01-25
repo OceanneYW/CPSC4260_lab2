@@ -39,18 +39,18 @@ class Scatterplot {
     vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
     vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
 
+    // Calculate means of the efficacy
+    vis.efficacyMean = d3.rollups(vis.data, v => d3.mean(v, d => d.efficacy), d => d.trial)
+    console.log(vis.efficacyMean)
     // Initialize scales
 
     vis.xScale = d3.scaleLinear()
       // .domain([0,1])
       .range([0, vis.width]);
 
-    vis.yScale1 = d3.scaleLinear()
-      .range([vis.height, 0]);
-
-    vis.yScale2 = d3.scaleLinear()
-      // .domain([0, 1])
-      .range([vis.height, 0]);
+    vis.yScale = d3.scaleBand()
+      .domain(d3.group(vis.data, d => d.trial).keys())
+      .range([0, vis.height]);
 
     // Initialize axes
     vis.xAxis = d3.axisBottom(vis.xScale)
@@ -59,16 +59,19 @@ class Scatterplot {
       .tickPadding(10)
       .tickFormat(d => d);
 
-    vis.yAxisL = d3.axisLeft(vis.yScale1)
+    vis.yAxisL = d3.axisLeft(vis.yScale)
       .ticks(4)
       .tickSize(-vis.width - 10)
       .tickFormat(d => "Trial " + d)
       .tickPadding(10);
 
-    vis.yAxisR = d3.axisRight(vis.yScale2)
+    // Rounds to 2 decimals
+    let roundFormatter = d3.format(".2")
+
+    vis.yAxisR = d3.axisRight(vis.yScale)
       .ticks(4)
       .tickSize(-vis.width - 10)
-      .tickFormat((d, i) => { console.log(d); return d })
+      .tickFormat((d, i) => roundFormatter(vis.efficacyMean[i][1]))
       .tickPadding(10);
     // Define size of SVG drawing area
     vis.svg = d3.select(vis.config.parentElement)
@@ -117,8 +120,8 @@ class Scatterplot {
 
     // Set the scale input domains
     vis.xScale.domain([0, d3.max(vis.data, vis.xValue)]);
-    vis.yScale1.domain([0, d3.max(vis.data, vis.yValue)]);
-    vis.yScale2.domain([0, d3.max(vis.data, vis.yValue)]);
+    // vis.yScale1.domain([d3.min(vis.data, vis.yValue), d3.max(vis.data, vis.yValue)]);
+    // vis.yScale2.domain([d3.min(vis.data, vis.yValue), d3.max(vis.data, vis.yValue)]);
 
     vis.renderVis();
   }
@@ -137,7 +140,7 @@ class Scatterplot {
       .append('circle')
       .attr('class', 'point')
       .attr('r', 8)
-      .attr('cy', d => vis.yScale1(vis.yValue(d)))
+      .attr('cy', d => vis.yScale(vis.yValue(d)) + (vis.yScale.bandwidth()/2))
       .attr('cx', d => vis.xScale(vis.xValue(d)));
 
     // Update the axes/gridlines
@@ -149,9 +152,11 @@ class Scatterplot {
     vis.yAxisG
       .call(vis.yAxisL)
       .call(g => g.select('.domain').remove())
+      .call(g => g.selectAll('.tick line').remove());
 
     vis.yAxisGR
       .call(vis.yAxisR)
       .call(g => g.select('.domain').remove())
+      .call(g => g.selectAll('.tick line').remove());
   }
 }

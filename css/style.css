@@ -14,10 +14,10 @@ h2 {
 
 }
 
-.axis_yLine {
+/* .axis_yLine {
   fill: none;
   stroke: none;
-}
+} */
 
 .axis text {
   font-size: 13px;
