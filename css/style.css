@@ -3,4 +3,23 @@ body {
   font-family: sans-serif;
 }
 
-/* Todo: add styles; */
+/* Text property */
+h2 {
+  font-size: medium;
+}
+
+.axis line {
+  fill: none;
+  stroke: darkgray;
+
+}
+
+.axis text {
+  font-size: 13px;
+  fill: dimgrey;
+}
+
+.point {
+  fill-opacity: 0.5;
+  fill: lightblue;
+}
